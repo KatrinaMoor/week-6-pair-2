@@ -6,11 +6,11 @@ import java.util.Scanner;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import com.techelevator.projects.model.Department;
-import com.techelevator.projects.model.DepartmentDAO;
+import com.techelevator.projects.model.interfaces.DepartmentDAO;
 import com.techelevator.projects.model.Employee;
-import com.techelevator.projects.model.EmployeeDAO;
+import com.techelevator.projects.model.interfaces.EmployeeDAO;
 import com.techelevator.projects.model.Project;
-import com.techelevator.projects.model.ProjectDAO;
+import com.techelevator.projects.model.interfaces.ProjectDAO;
 import com.techelevator.projects.model.jdbc.JDBCDepartmentDAO;
 import com.techelevator.projects.model.jdbc.JDBCEmployeeDAO;
 import com.techelevator.projects.model.jdbc.JDBCProjectDAO;

@@ -12,7 +12,7 @@ import com.techelevator.projects.model.interfaces.DepartmentDAO;
 
 public class JDBCDepartmentDAO implements DepartmentDAO {
 	
-	private JdbcTemplate jdbcTemplate;
+	public JdbcTemplate jdbcTemplate;
 
 	public JDBCDepartmentDAO(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
