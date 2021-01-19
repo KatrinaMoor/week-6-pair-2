@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.techelevator.projects.model.Department;
-import com.techelevator.projects.model.DepartmentDAO;
+import com.techelevator.projects.model.interfaces.DepartmentDAO;
 
 public class JDBCDepartmentDAO implements DepartmentDAO {
 	

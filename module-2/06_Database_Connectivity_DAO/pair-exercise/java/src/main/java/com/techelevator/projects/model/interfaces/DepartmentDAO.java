@@ -1,6 +1,8 @@
-package com.techelevator.projects.model;
+package com.techelevator.projects.model.interfaces;
 
 import java.util.List;
+
+import com.techelevator.projects.model.Department;
 
 public interface DepartmentDAO {
 

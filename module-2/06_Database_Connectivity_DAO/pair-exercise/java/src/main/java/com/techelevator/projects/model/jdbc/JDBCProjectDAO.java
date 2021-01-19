@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.techelevator.projects.model.Project;
-import com.techelevator.projects.model.ProjectDAO;
+import com.techelevator.projects.model.interfaces.ProjectDAO;
 
 public class JDBCProjectDAO implements ProjectDAO {
 

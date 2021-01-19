@@ -8,7 +8,7 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.techelevator.projects.model.Employee;
-import com.techelevator.projects.model.EmployeeDAO;
+import com.techelevator.projects.model.interfaces.EmployeeDAO;
 
 public class JDBCEmployeeDAO implements EmployeeDAO {
 
