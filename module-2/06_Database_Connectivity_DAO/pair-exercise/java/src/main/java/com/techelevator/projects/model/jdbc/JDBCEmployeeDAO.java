@@ -6,7 +6,9 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 
+import com.techelevator.projects.model.Department;
 import com.techelevator.projects.model.Employee;
 import com.techelevator.projects.model.interfaces.EmployeeDAO;
 
@@ -19,8 +21,9 @@ public class JDBCEmployeeDAO implements EmployeeDAO {
 	}
 	
 	@Override
-	public List<Employee> getAllEmployees() {
-		return new ArrayList<>();
+	public List<Employee> getAllEmployees() 
+	{
+	return null;
 	}
 
 	@Override
