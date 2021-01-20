@@ -49,17 +49,12 @@ public class JDBCProjectDAO implements ProjectDAO {
 	public void removeEmployeeFromProject(Long projectId, Long employeeId) 
 	{
 		
-		String removeEmployee = "DELETE FROM project_employee" +
-								"WHERE employee_id = ? " +
-								"AND project_id = ?;";
+		String removeEmployee = " DELETE FROM project_employee" +
+								" WHERE project_id = ? " +
+								" AND employee_id = ?;";
 		
 		jdbcTemplate.update(removeEmployee, projectId, employeeId);	
 		
-//		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlFindCityById, id);
-//		if(results.next()) {
-//			theCity = mapRowToCity(results);
-//		}
-//		return theCity;
 	}
 
 	@Override
@@ -68,20 +63,10 @@ public class JDBCProjectDAO implements ProjectDAO {
 		String addEmployee = " INSERT INTO project_employee (project_id, employee_id) " +
 										" VALUES(?, ?);";
 		
-		//
+		
 		
 		jdbcTemplate.update(addEmployee, projectId, employeeId);
 		
-		
-		// call the nextval() function in postgres
-				//newCity.setId(getNextCityId());
-				
-				// then insert the data
-//				jdbcTemplate.update(sqlInsertCity, newCity.getId(),
-//												  newCity.getName(),
-//												  newCity.getCountryCode(),
-//												  newCity.getDistrict(),
-//												  newCity.getPopulation());
 	}
 
 	private Project mapRowToProject(SqlRowSet results)
@@ -90,8 +75,14 @@ public class JDBCProjectDAO implements ProjectDAO {
 		theProject = new Project();
 		theProject.setId(results.getLong("project_id"));
 		theProject.setName(results.getString("name"));
-		//theProject.setStartDate(results.getLocalDate("from_date"));
-		//theProject.setEndDate(results.getLocalDate("to_date"));
+		if(results.getString ("from_date") != null)
+		{
+		theProject.setStartDate(results.getDate("from_date").toLocalDate());
+		}
+		if(results.getString("to_date") != null)
+		{
+		theProject.setEndDate(results.getDate("to_date").toLocalDate());
+		}
 		return theProject;
 	}
 }
