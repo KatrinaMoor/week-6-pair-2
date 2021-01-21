@@ -18,9 +18,6 @@ import com.techelevator.projects.model.Department;
 import com.techelevator.projects.model.jdbc.JDBCDepartmentDAO;
 
 
-
-
-
 public class JDBCDepartmentDAOTEST 
 {
 		// Class variables
@@ -33,7 +30,7 @@ public class JDBCDepartmentDAOTEST
 		private static JdbcTemplate jdbcTemplate; // this is for test verification
 		
 		// This is the object under test
-		private JdbcTemplate dao;
+		private JDBCDepartmentDAO dao;
 
 	
 
@@ -64,7 +61,7 @@ public class JDBCDepartmentDAOTEST
 	public void setUp() 
 	{
 		// Create a new instance so that we have a CLEAN/FRESH DAO for each test
-		dao = new JdbcTemplate(dataSource);
+		dao = new JDBCDepartmentDAO(dataSource);
 	}
 
 	@After
