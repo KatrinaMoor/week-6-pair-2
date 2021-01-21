@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 
 import com.techelevator.projects.model.Department;
+import com.techelevator.projects.model.jdbc.JDBCDepartmentDAO;
 
 
 
@@ -22,25 +23,24 @@ import com.techelevator.projects.model.Department;
 
 public class JDBCDepartmentDAOTEST 
 {
-	// this is the NEW country code we use for all tests
-		private static final String TEST_DEPARTMENT = "Home Destruction";
+		// Class variables
+	
+		// This is the NEW country code we use for all tests
+		private static final long TEST_ID = 1211;
 
-		//SingleConnectionDataSource allows for transactions -- important so that we can ROLLBACK the tests
+		// SingleConnectionDataSource allows for transactions -- important so that we can ROLLBACK the tests
 		private static SingleConnectionDataSource dataSource;
 		private static JdbcTemplate jdbcTemplate; // this is for test verification
 		
-		// this is the object under test
-		private JDBCDepartmentDAOTEST dao;
+		// This is the object under test
+		private JdbcTemplate dao;
 
-	public JDBCDepartmentDAOTEST(SingleConnectionDataSource dataSource2) 
-	{
-			// TODO Auto-generated constructor stub
-	}
+	
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception 
 	{
-		//setup the data source and transaction for ALL tests (one big transaction)
+		// Setup the data source and transaction for ALL tests (one big transaction)
 				dataSource = new SingleConnectionDataSource();
 				dataSource.setUrl("jdbc:postgresql://localhost:5432/projects");
 				dataSource.setUsername("postgres");
@@ -54,101 +54,83 @@ public class JDBCDepartmentDAOTEST
 	}
 
 	@AfterClass
-	public static void tearDownAfterClass() throws Exception 
+	public static void tearDownAfterClass() throws SQLException 
 	{
-		// after ALL tests run destroy the data source
-				dataSource.destroy();
+		// After ALL tests run destroy the data source
+		dataSource.destroy();
 	}
 
 	@Before
-	public void setUp() throws Exception 
+	public void setUp() 
 	{
-		// this is the arrange that runs before each test
-				updateDepartment();		
-
-				// create a new instance so that we have a CLEAN/FRESH DAO for each test
-				dao = new JDBCDepartmentDAOTEST(dataSource);
+		// Create a new instance so that we have a CLEAN/FRESH DAO for each test
+		dao = new JdbcTemplate(dataSource);
 	}
 
 	@After
-	public void tearDown() throws Exception 
+	public void tearDown() throws SQLException 
 	{
 		// ROLLBACK the changes in the database after EACH test
-				dataSource.getConnection().rollback();
+		dataSource.getConnection().rollback();
 	}
 
 	@Test
-	public void test() throws SQLException 
+	public void saveDepartment_updates_to_department() throws SQLException 
 	{
-		//arrange
+			// arrange
+			Department testDepartment = buildDepartment( 4, "Store Support");
 		
-				//create data source
-				SingleConnectionDataSource dataSource = new SingleConnectionDataSource();
-				dataSource.setUrl("jdbc:postgresql://localhost:5432/projects");
-				dataSource.setUsername("postgres");
-				dataSource.setPassword("postgres1");
+			// act
+			dao.saveDepartment(testDepartment);
+			Department actualDepartment = selectDepartmentById(testDepartment.getId());
 				
-				dataSource.setAutoCommit(false);
+			//assert
+			// where I test if it worked
 				
-				// use for verification
-				JdbcTemplate template = new JdbcTemplate(dataSource);
-				String sqlInsertDepartment = "UPDATE department " +
-						   " SET name = ? " +
-						   " WHERE department_id = ?; ";
+			assertNotNull(testDepartment.getId());
+			assertDepartmentsAreEqual(testDepartment, actualDepartment);
+					
 				
-				// create the dao -- this is the object under test
-				JDBCDepartmentDAOTEST dao = new JDBCDepartmentDAOTEST(dataSource);
-				
-				Department department = new Department();
-				department.setName("Store Support");
-				department.setId((long) 4);
-				
-				Department testDepartment = buildDepartment((long) 4, "Store Support");
-		
-				//act
-				dao.save(department);
-				
-				//assert
-				// where I test if it worked
-				
-				// check the database
-				SqlRowSet rows = template.queryForRowSet(sqlInsertDepartment, department.getId());
-				
-				if(rows.next())
-				{
-					assertEquals(department.getName(), rows.getString("name"));
-				}
-				else
-					fail("Because we did not get the name we were looking for: ");
-				
-				dataSource.getConnection().rollback();
 	}
 
-	private void save(Department department) 
+		// Assertion helpers
+	private void assertDepartmentsAreEqual(Department expected, Department actual)
 	{
-		// TODO Auto-generated method stub
-		
+		assertEquals(expected.getId(), actual.getId());
+		assertEquals(expected.getName(), actual.getName());
 	}
 
 		// DTO helpers
-		private Department buildDepartment(Long department_id, String name)
-		{
-			Department theDepartment;
-			theDepartment = new Department();
-			theDepartment.setId(department_id);
-			theDepartment.setName("name");
-			
-			return theDepartment;
-		}
-	
-	
-	// database helpers
-	public void updateDepartment()
+	private Department buildDepartment(long id, String name)
 	{
-		String sqlUpdateDepartment = "UPDATE department " +
-				   " SET name = ? " +
-				   " WHERE department_id = ?; ";
-		
-		jdbcTemplate.update(sqlUpdateDepartment, TEST_DEPARTMENT);
+		Department department = new Department();
+		department.setId(id);
+		department.setName(name);
+		return department;
 	}
+	
+	
+	   // Database helpers -- used to verify results in the database
+	private Department selectDepartmentById(long id)
+	{
+		Department department = null;
+		
+		String sql = "SELECT department_id"
+				   + ", name "
+				   + "FROM department "
+				   + "WHERE department_id = ?;";
+		
+		
+		SqlRowSet rows = jdbcTemplate.queryForRowSet(sql, id);
+		
+		if(rows.next())
+		{
+			String name = rows.getString("name");
+			department = buildDepartment(id, name);
+		}
+		return department;
+		
+		
+	}
+	
 }
